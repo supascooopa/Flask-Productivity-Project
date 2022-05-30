@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>pdf to excel</title>
+</head>
+<body>
+<div>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag()}}
+        {{ form.file_field()}}
+        {{ form.submit()}}
+    </form>
+    </div>
+<A HREF="{{url_for('home')}}">home</A>
+</body>
+</html>

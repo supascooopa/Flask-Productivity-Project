@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text to CSV converter</title>
+</head>
+
+<body>
+    <div>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag()}}
+        {{ form.file_field()}}
+        {{ form.submit()}}
+    </form>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<A HREF="{{url_for('home')}}">home</A>
+</body>
+</html>
