@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
+{% extends 'header.html' %}
 <body>
 <a href="{{ url_for('text_to_csv') }}">text to csv</a>
 <a href="{{ url_for('pdf_to_excel') }}">PDF to Excel</a>
