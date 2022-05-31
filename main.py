@@ -10,10 +10,12 @@ from flask import send_from_directory, abort
 from flask import send_file
 from flask import url_for
 from flask import redirect
-from whatsapp import parktel
+from whatsapp import text_parser_ctwo
 from company_1 import company_number_one
 from openpyxl import load_workbook
 import io
+from file_manager_v101 import get_file_name
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -54,12 +56,12 @@ def text_to_csv():
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                app.config["UPLOAD_FOLDER"],
                                secure_file_name))  # save the file
-        # Below Parktel function parser a text file (Specifically Whatsapp price list sent by the company Parktel)
+        # Below function parser a text file (Specifically Whatsapp price list sent by the company two)
         # in order to convert it to a csv file we pass the directory location of the file we want to be converted
-        modified_file_name = parktel(os.path.abspath(f"static\\files\\{secure_file_name}"))
-        # In order send the user the modified data we split the name parktel function gave back to us
+        modified_file_name = text_parser_ctwo(os.path.abspath(f"static\\files\\{secure_file_name}"))
+        # In order send the user the modified data we split the name function gave back to us
         # and take the modified file name and redirect that name to another function
-        # TODO below can be done inside parktel function
+        # TODO below can be done inside the function
         new_file_name = modified_file_name.split("\\")[-1]
         return redirect(url_for("csv_download", file_name=new_file_name))
 
@@ -116,7 +118,8 @@ def excel_download(file_name):
 def po_automator():
     # TODO upload our own excel file
     # opens the workbook from the specified directory
-    wb = load_workbook("static/files/SALES_LIST_19TH_APRIL_2022_USD.pdf28-04-2022.xlsx")
+    excel_file = get_file_name(file_extension=".xlsx")
+    wb = load_workbook(f"static/files/{excel_file}")
     # activating worksheet
     ws = wb.active
     # grabbing values by row
@@ -156,7 +159,8 @@ def po_automator():
         for rows in new_list:
             new_ws.append(rows)
         # choosing name for file and saving the excel file
-        new_file_name = "static\\files\\testing_2.xlsx"
+        todays_date = datetime.now().strftime("%d.%m.%y %H:%M")
+        new_file_name = f"static\\files\\PO{todays_date}.xlsx"
         new_wb.save(new_file_name)
         only_file_name = new_file_name.split("\\")[-1]
         return redirect(url_for("excel_download", file_name=only_file_name))
@@ -165,7 +169,7 @@ def po_automator():
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    return "File size larger than 300Kb", 413
+    return "File size larger than 400Kb", 413
 
 
 if __name__ == "__main__":
