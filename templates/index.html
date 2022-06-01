@@ -1,7 +1,20 @@
 {% extends 'header.html' %}
 <body>
-<a href="{{ url_for('text_to_csv') }}">text to csv</a>
-<a href="{{ url_for('pdf_to_excel') }}">PDF to Excel</a>
-<a href="{{ url_for('po_automator') }}">PO_automator</a>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <a href="{{ url_for('text_to_csv') }}">text to csv</a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('pdf_to_excel') }}">PDF to Excel</a>
+    </div>
+    <div class="col">
+      <a href="{{ url_for('po_automator') }}">PO_automator</a>
+    </div>
+  </div>
+</div>
+
+
+
 </body>
 </html>
