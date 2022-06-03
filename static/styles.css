@@ -1,0 +1,25 @@
+body {
+background-color: #EFFFFD;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+ }
+
+
+#main-container {
+                    background-color: #85F4FF;
+}
+
+.col-4 {
+        border-right:1px solid #EFFFFD;
+}
+
+h3 {
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    }
+
+p {
+    font-family: 'Kdam Thmor Pro', sans-serif;
+     }
