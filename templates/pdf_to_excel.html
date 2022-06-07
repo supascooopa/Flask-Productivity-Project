@@ -1,17 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>pdf to excel</title>
-</head>
-<body>
-<div>
-    <form method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag()}}
-        {{ form.file_field()}}
-        {{ form.submit()}}
+
+{% block content %}
+{% include "header.html" %}
+<div class="upload-container">
+    <form class="row justify-content-md-center">
+        {{ form.hidden_tag() }}
+        <div class="col-auto">
+            {{ form.file_field.label }}
+        </div>
+        <div class="col-auto">
+            {{ form.file_field(class_="form-control") }}
+        </div>
+        <div class="col-auto">
+            {{ form.submit(class_="btn btn-primary mb-2") }}
+        </div>
     </form>
-    </div>
-<A HREF="{{url_for('home')}}">home</A>
-</body>
-</html>
+</div>
+{% include "footer.html" %}
+{% endblock %}
+
+

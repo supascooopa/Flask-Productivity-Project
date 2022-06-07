@@ -1,5 +1,5 @@
-{% extends 'header.html' %}
 {% block content %}
+{% include "header.html" %}
 <div class="container-fluid" id="main-container">
   <div class="row">
     <div class="col-4 text-center">
@@ -24,4 +24,5 @@
     </div>
   </div>
 </div>
+{% include "footer.html" %}
 {% endblock %}

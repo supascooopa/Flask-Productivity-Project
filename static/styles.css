@@ -1,5 +1,5 @@
 body {
-background-color: #EFFFFD;
+background-color: #DFF6FF;
 }
 
 a {
@@ -9,7 +9,11 @@ a {
 
 
 #main-container {
-                    background-color: #85F4FF;
+     background-color: #051367;
+     padding-top: 25px;
+     padding-bottom: 25px;
+     margin-top: 50px;
+     margin-bottom: 50px;
 }
 
 .col-4 {
@@ -17,9 +21,40 @@ a {
 }
 
 h3 {
+    color: white;
     font-family: 'Kdam Thmor Pro', sans-serif;
     }
 
 p {
     font-family: 'Kdam Thmor Pro', sans-serif;
+    color: white;
      }
+label {
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    color: #051367;
+}
+
+.footer-message {
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    color: #051367;
+}
+
+.fa {
+    color: white;
+}
+
+.fa-heart{
+    color: #051367;
+}
+
+.upload-container {
+     margin: 100px 30% 100px 30%;
+     }
+
+.form-group {
+    margin: 50px 50% 0px 50%;
+}
+
+#submit {
+    margin: 0px 50% 0px 50%;
+}
