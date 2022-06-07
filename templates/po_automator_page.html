@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>PO AUTOMATOR</title>
-</head>
-<body>
+{% block content %}
+{% include "header.html" %}
 <form action="" method="post">
     {{ form.csrf_token }}
     {% for num in range(0,len) %}
@@ -16,5 +11,5 @@
     {% endfor %}
     {{form.submit}}
 </form>
-</body>
-</html>
+{% include "footer.html" %}
+{% endblock %}

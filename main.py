@@ -114,11 +114,11 @@ def excel_download(file_name):
         abort(404)
 
 
-@app.route("/PO-automator", methods=["GET", "POST"])
-def po_automator():
+@app.route("/PO-automator/<excel_file_name>", methods=["GET", "POST"])
+def po_automator(excel_file_name):
     # TODO upload our own excel file
     # opens the workbook from the specified directory
-    excel_file = get_file_name(file_extension=".xlsx")
+    excel_file = excel_file_name
     wb = load_workbook(f"static/files/{excel_file}")
     # activating worksheet
     ws = wb.active
@@ -166,6 +166,16 @@ def po_automator():
         return redirect(url_for("excel_download", file_name=only_file_name))
     return render_template("po_automator_page.html", lst=rows, form=po_form, len=len(rows))
 
+@app.route("/PO-excel-upload",methods=["GET", "POST"])
+def upload_excel_file():
+    form = UploadFileForm()
+    if form.validate_on_submit():
+        file = form.file_field.data  # grab the file
+        secure_file_name = secure_filename(file.filename)
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"],
+                               secure_file_name))
+        return redirect(url_for("po_automator", excel_file_name=secure_file_name))
+    return render_template("upload_excel_file.html", form=form)
 
 @app.errorhandler(413)
 def request_entity_too_large(error):

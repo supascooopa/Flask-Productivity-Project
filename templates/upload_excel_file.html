@@ -1,0 +1,18 @@
+{% block content %}
+{% include "header.html" %}
+<div class="upload-container">
+    <form class="row justify-content-md-center">
+        {{ form.hidden_tag() }}
+        <div class="col-auto">
+            {{ form.file_field.label }}
+        </div>
+        <div class="col-auto">
+            {{ form.file_field(class_="form-control") }}
+        </div>
+        <div class="col-auto">
+            {{ form.submit(class_="btn btn-primary mb-2") }}
+        </div>
+    </form>
+</div>
+{% include "footer.html" %}
+{% endblock %}
