@@ -14,7 +14,6 @@ from whatsapp import text_parser_ctwo
 from company_1 import company_number_one
 from openpyxl import load_workbook
 import io
-from file_manager_v101 import get_file_name
 from datetime import datetime
 
 

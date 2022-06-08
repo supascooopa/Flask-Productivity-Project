@@ -1,7 +1,7 @@
 {% block content %}
 {% include "header.html" %}
 <div class="upload-container">
-    <form class="row justify-content-md-center">
+    <form class="row justify-content-md-center" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="col-auto">
             {{ form.file_field.label }}

@@ -1,6 +1,6 @@
 {% block content %}
 {% include "header.html" %}
-<form action="" method="post">
+<form class="row justify-content-md-center" action="" method="POST" enctype="multipart/form-data">
     {{ form.csrf_token }}
     {% for num in range(0,len) %}
 
@@ -9,7 +9,9 @@
             {{ lst[num][0] }} {{ lst[num][1] }} {{form.phones[num]}}
         </P>
     {% endfor %}
+    <div class="col-auto">
     {{form.submit}}
+    </div>
 </form>
 {% include "footer.html" %}
 {% endblock %}
