@@ -10,10 +10,6 @@ a {
 
 #main-container {
      background-color: #051367;
-     padding-top: 25px;
-     padding-bottom: 25px;
-     margin-top: 50px;
-     margin-bottom: 50px;
 }
 
 #form-container {
@@ -21,14 +17,17 @@ a {
     border:1px solid #EFFFFD;
 }
 
-.col-4 {
-        border-right:1px solid #EFFFFD;
-}
+
 
 h3 {
     color: white;
     font-family: 'Kdam Thmor Pro', sans-serif;
     }
+
+h5 {
+    color: white;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+}
 
 p {
     font-family: 'Kdam Thmor Pro', sans-serif;
@@ -46,6 +45,7 @@ label {
 
 .fa {
     color: white;
+    padding-top: 10px;
 }
 
 .fa-heart{
@@ -54,6 +54,10 @@ label {
 
 .upload-container {
      margin: 100px 30% 100px 30%;
+     }
+
+.PO-container {
+     margin: 50px 25% 50px 25%;
      }
 
 .form-group {

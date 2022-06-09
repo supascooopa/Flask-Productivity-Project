@@ -1,21 +1,21 @@
 {% block content %}
 {% include "header.html" %}
-<div class="container-fluid" id="main-container">
+<div class="container my-3 mx-auto" id="main-container">
   <div class="row">
-    <div class="col-4 text-center">
+    <div class="col-4 text-center border-end">
       <i class="fa fa-file-csv fa-4x"></i>
       <a href="{{ url_for('text_to_csv') }}">
         <h3>Text To CSV</h3>
       </a>
     </div>
-    <div class="col-4 text-center">
+    <div class="col-4 text-center border-end">
       <i class="fa fa-file-excel fa-4x"></i>
       <a href="{{ url_for('pdf_to_excel') }}">
         <h3> PDF To Excel </h3>
         <p> Converting Tables in PDF files to excel sheets </p>
       </a>
     </div>
-    <div class="col-4 text-center">
+    <div class="col-4 text-center border-end">
       <i class="fa fa-cart-plus fa-4x"></i>
       <a href="{{ url_for('upload_excel_file') }}">
         <h3>PO Automator</h3>
