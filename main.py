@@ -117,8 +117,7 @@ def excel_download(file_name):
 def po_automator(excel_file_name):
     # TODO upload our own excel file
     # opens the workbook from the specified directory
-    excel_file = excel_file_name
-    wb = load_workbook(f"static/files/{excel_file}")
+    wb = load_workbook(f"static/files/{excel_file_name}")
     # activating worksheet
     ws = wb.active
     # grabbing values by row
@@ -165,7 +164,8 @@ def po_automator(excel_file_name):
         return redirect(url_for("excel_download", file_name=only_file_name))
     return render_template("po_automator_page.html", lst=rows, form=po_form, len=len(rows))
 
-@app.route("/PO-excel-upload",methods=["GET", "POST"])
+
+@app.route("/PO-excel-upload", methods=["GET", "POST"])
 def upload_excel_file():
     form = UploadFileForm()
     if form.validate_on_submit():

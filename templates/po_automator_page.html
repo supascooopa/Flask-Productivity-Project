@@ -1,15 +1,17 @@
 {% block content %}
 {% include "header.html" %}
+
 <form class="row justify-content-md-center" action="" method="POST" enctype="multipart/form-data">
     {{ form.csrf_token }}
     {% for num in range(0,len) %}
 
         {{ form.phones[num].hidden_tag() }}
-        <div class="col-lg-4 col-sm-auto my-3 px-5" >
+        <div class="col-lg-4 col-sm-auto my-3 px-5" id="form-container" >
             <h5>{{ lst[num][0] }} {{ lst[num][1] }}</h5> {{form.phones[num]}}
         </div>
     {% endfor %}
     {{form.submit(class_="btn btn-primary btn-lg btn-block")}}
 </form>
+
 {% include "footer.html" %}
 {% endblock %}
