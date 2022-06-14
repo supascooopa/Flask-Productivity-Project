@@ -1,7 +1,7 @@
 import openpyxl
 from flask import Flask
 from flask import render_template
-from wtforms import FileField, SubmitField, StringField, FieldList, FormField
+from wtforms import FileField, SubmitField, StringField, FieldList, FormField, PasswordField
 from flask_wtf import FlaskForm
 from werkzeug.utils import secure_filename
 import os
@@ -15,12 +15,39 @@ from company_1 import company_number_one
 from openpyxl import load_workbook
 import io
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "SUPER_SECRET_KEY"
 app.config["UPLOAD_FOLDER"] = os.path.abspath("static\\files")  # configure upload folder
 app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file lenght is 400kb
+db = SQLAlchemy(app)
+
+
+class User(db.Model, UserMixin):
+    """ Database where the user information will be stored"""
+    user_id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String(10), nullable=False, unique=True)
+    user_password = db.Column(db.String(80), nullable=False)
+
+
+# db.create_all()  # creating db
+
+
+class UserLogin(FlaskForm):
+    user_name_field = StringField("User Name", validators=[InputRequired()])
+    password_field = PasswordField("Password", validators=[InputRequired()])
+    submit = SubmitField("Login")
+
+
+class UserRegistration(FlaskForm):
+    user_name_field = StringField("User Name", validators=[InputRequired()])
+    password_field = PasswordField("Password", validators=[InputRequired()])
+    submit = SubmitField("Submit")
 
 
 class UploadFileForm(FlaskForm):
@@ -38,7 +65,15 @@ class POAutomationForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
+def login_page():
+    form = UserLogin()
+    if form.validate_on_submit():
+        return redirect(url_for("home"))
+    return render_template("login.html", login_form=form)
+
+
+@app.route("/home")
 def home():
     """ Home Page
      Where links to various parts of the application are located"""
@@ -115,7 +150,7 @@ def excel_download(file_name):
 
 @app.route("/PO-automator/<excel_file_name>", methods=["GET", "POST"])
 def po_automator(excel_file_name):
-    # TODO upload our own excel file
+
     # opens the workbook from the specified directory
     wb = load_workbook(f"static/files/{excel_file_name}")
     # activating worksheet

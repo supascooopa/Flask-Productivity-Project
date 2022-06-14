@@ -4,8 +4,7 @@
 <form class="row justify-content-md-center" action="" method="POST" enctype="multipart/form-data">
     {{ form.csrf_token }}
     {% for num in range(0,len) %}
-
-        {{ form.phones[num].hidden_tag() }}
+    {{ form.phones[num].hidden_tag() }}
         <div class="col-lg-offset-4 col-sm-auto my-3 px-5 mx-auto my-auto text-center" id="form-container" >
             <h5>{{ lst[num][0] }} {{ lst[num][1] }}</h5> {{form.phones[num]}}
         </div>
