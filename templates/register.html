@@ -1,0 +1,31 @@
+{% block content %}
+{% include "header.html" %}
+<div class="registartion message">
+    <div class="row justify-content-md-center">
+        <div class="col-auto">
+            <h1> Please fill out the information below to register a user.</h1>
+        </div>
+    </div>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    {{ register_form.hidden_tag() }}
+    <div class="row justify-content-md-center py-0">
+        <div class="form-group col-auto mt-5">
+    {{ register_form.user_name_field(class_="form-control") }}
+        </div>
+        </div>
+    <div class="row justify-content-md-center py-0">
+        <div class="form-group col-auto my-1">
+    {{ register_form.password_field(class_="form-control") }}
+        </div>
+               </div>
+    <div class="row justify-content-md-center py-0">
+        <div class="col-auto my-1 mb-5">
+    {{ register_form.submit(class_='btn btn-primary btn-lg mx-auto ') }}
+        </div>
+    </div>
+</form>
+
+{% include "footer.html" %}
+{% endblock %}

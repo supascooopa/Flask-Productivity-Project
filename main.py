@@ -10,7 +10,7 @@ from flask import send_from_directory, abort
 from flask import send_file
 from flask import url_for
 from flask import redirect
-from whatsapp import text_parser_ctwo
+# from whatsapp import text_parser_ctwo
 from company_1 import company_number_one
 from openpyxl import load_workbook
 import io
@@ -20,11 +20,11 @@ from flask_login import UserMixin
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "SUPER_SECRET_KEY"
 app.config["UPLOAD_FOLDER"] = os.path.abspath("static\\files")  # configure upload folder
-app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file lenght is 400kb
+app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file length is 400kb
 db = SQLAlchemy(app)
 
 
@@ -72,6 +72,13 @@ def login_page():
         return redirect(url_for("home"))
     return render_template("login.html", login_form=form)
 
+@app.route("/register-user", methods=['GET','POST'])
+def registration_page():
+    form = UserRegistration()
+    if form.validate_on_submit():
+        return redirect(url_for("login_page"))
+    return render_template("register.html", register_form=form)
+
 
 @app.route("/home")
 def home():
@@ -98,8 +105,8 @@ def text_to_csv():
         # TODO below can be done inside the function
         new_file_name = modified_file_name.split("\\")[-1]
         return redirect(url_for("csv_download", file_name=new_file_name))
-
-    return render_template("text to csv page.html", form=form)
+#
+#     return render_template("text to csv page.html", form=form)
 
 
 @app.route("/pdftoexcel", methods=["GET", "POST"])
