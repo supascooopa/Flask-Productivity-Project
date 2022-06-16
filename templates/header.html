@@ -17,6 +17,7 @@
         <h3>Blue Cell Pro</h3>
     </a>
     <div class="btn-group">
+
   <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
     Menu
   </button>
@@ -25,6 +26,11 @@
     <li><a class="dropdown-item" href="{{ url_for('pdf_to_excel') }}">PDF To Excel</a></li>
     <li><a class="dropdown-item" href="{{ url_for('upload_excel_file') }}">PO Automator</a></li>
   </ul>
+        <a href="{{ url_for('logout') }}">
+            <button type="button" class="btn btn-primary">
+                Logout
+            </button>
+        </a>
 </div>
   </div>
 </nav>

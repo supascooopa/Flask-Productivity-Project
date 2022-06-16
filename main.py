@@ -89,6 +89,13 @@ def login_page():
     return render_template("login.html", login_form=form)
 
 
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login_page'))
+
+
 @app.route("/register-user", methods=['GET', 'POST'])
 def registration_page():
     form = UserRegistration()
@@ -128,8 +135,7 @@ def text_to_csv():
         # TODO below can be done inside the function
         new_file_name = modified_file_name.split("\\")[-1]
         return redirect(url_for("csv_download", file_name=new_file_name))
-#
-#     return render_template("text to csv page.html", form=form)
+    return render_template("text to csv page.html", form=form)
 
 
 @app.route("/pdftoexcel", methods=["GET", "POST"])

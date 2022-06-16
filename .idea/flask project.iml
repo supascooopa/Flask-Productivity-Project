@@ -11,5 +11,6 @@
     <orderEntry type="module" module-name="PDF TO EXCEL CONVERTER" />
     <orderEntry type="module" module-name="PO automator" />
     <orderEntry type="module" module-name="file_manager" />
+    <orderEntry type="module" module-name="emo automation" />
   </component>
 </module>
