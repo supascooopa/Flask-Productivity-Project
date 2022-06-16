@@ -5,7 +5,7 @@ from wtforms import FileField, SubmitField, StringField, FieldList, FormField, P
 from flask_wtf import FlaskForm
 from werkzeug.utils import secure_filename
 import os
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, length
 from flask import send_from_directory, abort
 from flask import send_file
 from flask import url_for
@@ -16,7 +16,8 @@ from openpyxl import load_workbook
 import io
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
+from flask_login import UserMixin, login_user, LoginManager,login_required, logout_user, current_user
+from flask_bcrypt import Bcrypt
 
 
 app = Flask(__name__)
@@ -26,6 +27,7 @@ app.config["SECRET_KEY"] = "SUPER_SECRET_KEY"
 app.config["UPLOAD_FOLDER"] = os.path.abspath("static\\files")  # configure upload folder
 app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file length is 400kb
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 
 class User(db.Model, UserMixin):
@@ -39,14 +41,14 @@ class User(db.Model, UserMixin):
 
 
 class UserLogin(FlaskForm):
-    user_name_field = StringField("User Name", validators=[InputRequired()])
-    password_field = PasswordField("Password", validators=[InputRequired()])
+    user_name_field = StringField("User Name", validators=[InputRequired(), length(min=2, max=20)])
+    password_field = PasswordField("Password", validators=[InputRequired(), length(min=8, max=20)])
     submit = SubmitField("Login")
 
 
 class UserRegistration(FlaskForm):
-    user_name_field = StringField("User Name", validators=[InputRequired()])
-    password_field = PasswordField("Password", validators=[InputRequired()])
+    user_name_field = StringField("User Name", validators=[InputRequired(), length(min=2, max=20)])
+    password_field = PasswordField("Password", validators=[InputRequired(), length(min=8, max=20)])
     submit = SubmitField("Submit")
 
 
@@ -73,10 +75,14 @@ def login_page():
     return render_template("login.html", login_form=form)
 
 
-@app.route("/register-user", methods=['GET','POST'])
+@app.route("/register-user", methods=['GET', 'POST'])
 def registration_page():
     form = UserRegistration()
     if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password_field.data)
+        new_user = User(user_name=form.user_name_field.data, user_password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
         return redirect(url_for("login_page"))
     return render_template("register.html", register_form=form)
 
