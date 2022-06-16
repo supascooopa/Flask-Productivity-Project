@@ -1,14 +1,29 @@
 {% block content %}
 {% include "header.html" %}
+
+<div class="welcoming-message">
+    <div class="row justify-content-md-center">
+        <div class="col-auto">
+            <h1> HELLO! </h1>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-auto">
+                <h4> Please fill in the below information to login! </h4>
+            </div>
+        </div>
+    </div>
+</div>
 <form method="POST" enctype="multipart/form-data">
     {{ login_form.hidden_tag() }}
     <div class="row justify-content-md-center py-0">
         <div class="form-group col-auto mt-5">
-    {{ login_form.user_name_field(class_="form-control") }}
+     {{ login_form.user_name_field.label }} {{ login_form.user_name_field(class_="form-control") }}
         </div>
+
         </div>
     <div class="row justify-content-md-center py-0">
         <div class="form-group col-auto my-1">
+            {{ login_form.password_field.label }}
     {{ login_form.password_field(class_="form-control") }}
         </div>
                </div>
