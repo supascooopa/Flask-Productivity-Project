@@ -10,7 +10,7 @@ from flask import send_from_directory, abort
 from flask import send_file
 from flask import url_for
 from flask import redirect
-# from whatsapp import text_parser_ctwo
+from whatsapp import text_parser_ctwo
 from company_1 import company_number_one
 from openpyxl import load_workbook
 import io
@@ -29,15 +29,20 @@ app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file length is 4
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+#---- CONFIGURING LOGIN MANAGER ---#
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
 
 class User(db.Model, UserMixin):
     """ Database where the user information will be stored"""
-    user_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(10), nullable=False, unique=True)
     user_password = db.Column(db.String(80), nullable=False)
 
 
-# db.create_all()  # creating db
+# db.create_all()
 
 
 class UserLogin(FlaskForm):
@@ -67,10 +72,19 @@ class POAutomationForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
 @app.route("/", methods=['GET', 'POST'])
 def login_page():
     form = UserLogin()
     if form.validate_on_submit():
+        user = User.query.filter_by(user_name=form.user_name_field.data).first()
+        if user:
+            if bcrypt.check_password_hash(user.user_password, form.password_field.data):
+                login_user(user)
         return redirect(url_for("home"))
     return render_template("login.html", login_form=form)
 
@@ -88,6 +102,7 @@ def registration_page():
 
 
 @app.route("/home")
+@login_required
 def home():
     """ Home Page
      Where links to various parts of the application are located"""
@@ -96,6 +111,7 @@ def home():
 
 
 @app.route("/texttocsv", methods=["GET", "POST"])
+@login_required
 def text_to_csv():
     form = UploadFileForm()
     if form.validate_on_submit():
@@ -117,6 +133,7 @@ def text_to_csv():
 
 
 @app.route("/pdftoexcel", methods=["GET", "POST"])
+@login_required
 def pdf_to_excel():
     form = UploadFileForm()
     if form.validate_on_submit():
@@ -135,6 +152,7 @@ def pdf_to_excel():
 
 
 @app.route("/csv-download/<file_name>")
+@login_required
 def csv_download(file_name):
     # TODO DELETE FILE AFTER SENDING IT TO THE USER
     # A try block if the requested file doesn't exist
@@ -154,6 +172,7 @@ def csv_download(file_name):
 
 
 @app.route("/excel-download/<file_name>")
+@login_required
 def excel_download(file_name):
     # same as the above function except it works with pdf_to_excel function
     try:
@@ -163,6 +182,7 @@ def excel_download(file_name):
 
 
 @app.route("/PO-automator/<excel_file_name>", methods=["GET", "POST"])
+@login_required
 def po_automator(excel_file_name):
 
     # opens the workbook from the specified directory
@@ -215,6 +235,7 @@ def po_automator(excel_file_name):
 
 
 @app.route("/PO-excel-upload", methods=["GET", "POST"])
+@login_required
 def upload_excel_file():
     form = UploadFileForm()
     if form.validate_on_submit():
