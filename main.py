@@ -73,6 +73,18 @@ class POAutomationForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
+def writing_to_memory(path):
+
+        """A function to write files to memory and delete the created file"""
+
+        file_path = os.path.abspath(f"static/files/{path}")  # creating file path
+        return_data = io.BytesIO()  # ???
+        with open(file_path, "rb") as byte_file:  # reading as byte 'rb'
+            return_data.write(byte_file.read())  # writing to memory
+        return_data.seek(0)  # returning the cursor to the beginning
+        os.remove(file_path)  # removing the saved file
+        return return_data
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -114,7 +126,6 @@ def registration_page():
 def home():
     """ Home Page
      Where links to various parts of the application are located"""
-    # TODO REPLACE THE HOME PAGE WITH LOGIN PAGE
     return render_template("index.html")
 
 
@@ -145,7 +156,7 @@ def pdf_to_excel():
     form = UploadFileForm()
     if form.validate_on_submit():
         # same stuff like the above
-        # TODO put the grabing and saving file in a function
+        # TODO put the grabbing and saving file in a function
         file = form.file_field.data  # grab the file
         secure_file_name = secure_filename(file.filename)
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -161,18 +172,10 @@ def pdf_to_excel():
 @app.route("/csv-download/<file_name>")
 @login_required
 def csv_download(file_name):
-    # TODO DELETE FILE AFTER SENDING IT TO THE USER
     # A try block if the requested file doesn't exist
     try:
-        file_path = os.path.abspath(f"static/files/{file_name}")  # creating file path
-        return_data = io.BytesIO()  # ???
-        with open(file_path, "rb") as byte_file:  # reading as byte 'rb'
-            return_data.write(byte_file.read())  # writing to memory
-        return_data.seek(0)  # returning the cursor to the beginning
-        os.remove(file_path)  # removing the saved file
+        return_data = writing_to_memory(file_name)
         return send_file(return_data, mimetype="application/csv", attachment_filename=file_name)
-        # returns the requested file if true
-        # return send_from_directory(app.config["UPLOAD_FOLDER"], file_name, as_attachment=True)
     except FileNotFoundError:
         # file not found!
         abort(404)
@@ -182,8 +185,10 @@ def csv_download(file_name):
 @login_required
 def excel_download(file_name):
     # same as the above function except it works with pdf_to_excel function
+    # TODO test the below code at work
     try:
-        return send_from_directory(app.config["UPLOAD_FOLDER"], file_name, as_attachment=True)
+        return_data = writing_to_memory(file_name)
+        return send_file(return_data, mimetype="application/vnd.ms-excel", attachment_filename=file_name)
     except FileNotFoundError:
         abort(404)
 

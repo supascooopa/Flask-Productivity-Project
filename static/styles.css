@@ -38,6 +38,11 @@ label {
     color: #051367;
 }
 
+label{
+    font-size: 25px;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+}
+
 .footer-message {
     font-family: 'Kdam Thmor Pro', sans-serif;
     color: #051367;
