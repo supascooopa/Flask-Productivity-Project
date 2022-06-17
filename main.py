@@ -147,7 +147,7 @@ def text_to_csv():
         # TODO below can be done inside the function
         new_file_name = modified_file_name.split("\\")[-1]
         return redirect(url_for("csv_download", file_name=new_file_name))
-    return render_template("text to csv page.html", form=form)
+    return render_template("upload.html", form=form)
 
 
 @app.route("/pdftoexcel", methods=["GET", "POST"])
@@ -166,7 +166,7 @@ def pdf_to_excel():
         new_file_name = modified_file_name.split("\\")[-1]
         return redirect(url_for("excel_download", file_name=new_file_name))
 
-    return render_template("pdf_to_excel.html", form=form)
+    return render_template("upload.html", form=form)
 
 
 @app.route("/csv-download/<file_name>")
@@ -256,7 +256,7 @@ def upload_excel_file():
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"],
                                secure_file_name))
         return redirect(url_for("po_automator", excel_file_name=secure_file_name))
-    return render_template("upload_excel_file.html", form=form)
+    return render_template("upload.html", form=form)
 
 
 @app.route("/web_form_automator")
