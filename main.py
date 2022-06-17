@@ -18,6 +18,7 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager,login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
+from web_form_automator import emo_automator
 
 
 app = Flask(__name__)
@@ -29,7 +30,7 @@ app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file length is 4
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-#---- CONFIGURING LOGIN MANAGER ---#
+# ---- CONFIGURING LOGIN MANAGER --- #
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -251,6 +252,14 @@ def upload_excel_file():
                                secure_file_name))
         return redirect(url_for("po_automator", excel_file_name=secure_file_name))
     return render_template("upload_excel_file.html", form=form)
+
+
+@app.route("/web_form_automator")
+@login_required
+def form_automator():
+    emo_automator()
+    return "working on it..."
+
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
