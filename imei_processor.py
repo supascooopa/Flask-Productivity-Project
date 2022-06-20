@@ -25,7 +25,7 @@ for cols in ws.iter_cols(max_col=7, values_only=True):
             if isinstance(cells, int):
                 # Appending to the new ws and leaving the second IMEI slot empty
                 new_ws.append([cells, " ", "Samsung", "MODEL_NUMBER"])
-        # imie_detection function here
+        # imei_detection function here
     # filtering for the second IMEI
     elif column_headers is not None and column_headers.endswith("2"):
         for cells in cols:
