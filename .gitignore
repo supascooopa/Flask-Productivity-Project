@@ -1,5 +1,5 @@
 /static/files/
-/static/browser_automation/CE
-/static/browser_automation/invoice
-/static/browser_automation/XL
+/static/browser_automation/CE/
+/static/browser_automation/invoice/
+/static/browser_automation/XL/
 geckodriver.log

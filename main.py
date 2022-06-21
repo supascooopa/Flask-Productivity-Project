@@ -19,13 +19,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from web_form_automator import emo_automator
+from imei_processor import imei_machine
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "SUPER_SECRET_KEY"
-app.config["UPLOAD_FOLDER"] = os.path.abspath("static\\files")  # configure upload folder
+app.config["UPLOAD_FOLDER"] = os.path.abspath("static/files")  # configure upload folder
 app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file length is 400kb
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -162,11 +163,25 @@ def pdf_to_excel():
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                app.config["UPLOAD_FOLDER"],
                                secure_file_name))  # save the file
-        modified_file_name = company_number_one(os.path.abspath(f"static\\files\\{secure_file_name}"))
-        new_file_name = modified_file_name.split("\\")[-1]
+        modified_file_name = company_number_one(os.path.abspath(f"static/files/{secure_file_name}"))
+        new_file_name = modified_file_name.split("/")[-1]
         return redirect(url_for("excel_download", file_name=new_file_name))
 
     return render_template("upload.html", form=form)
+
+
+@app.route("/imei-machine", methods=["GET", "POST"])
+@login_required
+def imei_automator():
+    form = UploadFileForm()
+    if form.validate_on_submit():
+        file = form.file_field.data  # grab the file
+        secure_file_name = secure_filename(file.filename)
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                               app.config["UPLOAD_FOLDER"],
+                               secure_file_name))
+        modified_excel_file = imei_machine(os.path.abspath(f"static/files/{secure_file_name}"))
+        return redirect(url_for("excel_download", file_name=modified_excel_file))
 
 
 @app.route("/csv-download/<file_name>")
@@ -185,7 +200,6 @@ def csv_download(file_name):
 @login_required
 def excel_download(file_name):
     # same as the above function except it works with pdf_to_excel function
-    # TODO test the below code at work
     try:
         return_data = writing_to_memory(file_name)
         return send_file(return_data, mimetype="application/vnd.ms-excel", attachment_filename=file_name)
