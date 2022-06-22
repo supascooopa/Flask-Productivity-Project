@@ -11,7 +11,7 @@ def imei_machine(work_book):
     new_wb = Workbook()
     new_ws = new_wb.active
     new_ws.append(["IMEI 1", "IMEI 2", "BRAND", "MODEL"])
-    row_number = 1
+    row_number = 2
 
     # going through each page
     for sheet_names in sheet_names_lst:

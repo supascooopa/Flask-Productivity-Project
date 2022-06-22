@@ -12,11 +12,11 @@ def imei_finder(imei):
     response = requests.get(db_url+imei, headers=header)
     data = response.json()
     try:
-        phone_model = data["model"]
-        phone_brand = data["brand"]
+        phone_model = data["data"]["model"]
+        phone_brand = data["data"]["brand"]
     except KeyError:
         phone_model = "N/A"
         phone_brand = "N/A"
-
+    print(data)
     return [phone_model, phone_brand]
 

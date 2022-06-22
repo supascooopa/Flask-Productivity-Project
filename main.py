@@ -26,8 +26,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "SUPER_SECRET_KEY"
-app.config["UPLOAD_FOLDER"] = os.path.abspath("static/files")  # configure upload folder
-app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file length is 400kb
+app.config["UPLOAD_FOLDER"] = os.path.abspath("static\\files")  # configure upload folder
+app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file size is 400kb
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -163,8 +163,9 @@ def pdf_to_excel():
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                app.config["UPLOAD_FOLDER"],
                                secure_file_name))  # save the file
-        modified_file_name = company_number_one(os.path.abspath(f"static/files/{secure_file_name}"))
-        new_file_name = modified_file_name.split("/")[-1]
+        modified_file_name = company_number_one(os.path.abspath(f"static\\files\\{secure_file_name}"))
+        new_file_name = modified_file_name.split("\\")[-1]
+        print(new_file_name)
         return redirect(url_for("excel_download", file_name=new_file_name))
 
     return render_template("upload.html", form=form)
@@ -180,8 +181,11 @@ def imei_automator():
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                app.config["UPLOAD_FOLDER"],
                                secure_file_name))
-        modified_excel_file = imei_machine(os.path.abspath(f"static/files/{secure_file_name}"))
-        return redirect(url_for("excel_download", file_name=modified_excel_file))
+        modified_excel_file = imei_machine(os.path.abspath(f"static\\files\\{secure_file_name}"))
+        file_name = modified_excel_file.split("/")[-1]
+        print(file_name)
+        return redirect(url_for("excel_download", file_name=file_name))
+    return render_template("upload.html", form=form)
 
 
 @app.route("/csv-download/<file_name>")
@@ -190,7 +194,7 @@ def csv_download(file_name):
     # A try block if the requested file doesn't exist
     try:
         return_data = writing_to_memory(file_name)
-        return send_file(return_data, mimetype="application/csv", attachment_filename=file_name)
+        return send_file(return_data, mimetype="application/csv", download_name=file_name)
     except FileNotFoundError:
         # file not found!
         abort(404)
@@ -202,7 +206,7 @@ def excel_download(file_name):
     # same as the above function except it works with pdf_to_excel function
     try:
         return_data = writing_to_memory(file_name)
-        return send_file(return_data, mimetype="application/vnd.ms-excel", attachment_filename=file_name)
+        return send_file(return_data, mimetype="application/vnd.ms-excel", download_name=file_name)
     except FileNotFoundError:
         abort(404)
 
@@ -212,7 +216,7 @@ def excel_download(file_name):
 def po_automator(excel_file_name):
 
     # opens the workbook from the specified directory
-    wb = load_workbook(f"static/files/{excel_file_name}")
+    wb = load_workbook(f"static\\files\\{excel_file_name}")
     # activating worksheet
     ws = wb.active
     # grabbing values by row

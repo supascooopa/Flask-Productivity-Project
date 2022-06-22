@@ -25,12 +25,19 @@
       </a>
     </div>
       <div class="col-4 text-center border">
-<a href="{{ url_for('form_automator') }}">
-  <i class="fa fa-robot fa-4x"></i></i>
-  <h3>Web form automator </h3>
-  <p> reads an Excel file and automatically fills an internet form </p>
-</a>
+      <a href="{{ url_for('form_automator') }}">
+      <i class="fa fa-robot fa-4x"></i></i>
+      <h3>Web form automator</h3>
+      <p> reads an Excel file and automatically fills an internet form </p>
+      </a>
       </div>
+    <div class="col-4 text-center border">
+      <a href="{{ url_for('imei_automator') }}">
+        <i class="fa fa-filter fa-4x"></i>
+        <h3>IMEI machine</h3>
+        <p> Automates creation of IMEI registration form </p>
+      </a>
+    </div>
     </div>
 </div>
 {% include "footer.html" %}
