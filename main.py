@@ -34,7 +34,7 @@ bcrypt = Bcrypt(app)
 # ---- CONFIGURING LOGIN MANAGER --- #
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "login_page"
 
 
 class User(db.Model, UserMixin):
@@ -85,6 +85,7 @@ def writing_to_memory(path):
         return_data.seek(0)  # returning the cursor to the beginning
         os.remove(file_path)  # removing the saved file
         return return_data
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -155,6 +156,7 @@ def text_to_csv():
 @login_required
 def pdf_to_excel():
     form = UploadFileForm()
+    message = "Only add the last three pages of the price list! It can't be a image based PDF!!"
     if form.validate_on_submit():
         # same stuff like the above
         # TODO put the grabbing and saving file in a function
@@ -168,7 +170,7 @@ def pdf_to_excel():
         print(new_file_name)
         return redirect(url_for("excel_download", file_name=new_file_name))
 
-    return render_template("upload.html", form=form)
+    return render_template("upload.html", form=form, message=message)
 
 
 @app.route("/imei-machine", methods=["GET", "POST"])
@@ -224,6 +226,7 @@ def po_automator(excel_file_name):
     # creating a dictionary and inserting into FieldList
     form_dict = [{i[0]:i[1]} for i in rows]
     po_form = POAutomationForm(phones=form_dict)
+
     if po_form.validate_on_submit():
         # using zip() to go over the FieldList fields and active sheet rows
         for data, phones in zip(po_form.data["phones"], rows):
@@ -268,13 +271,14 @@ def po_automator(excel_file_name):
 @login_required
 def upload_excel_file():
     form = UploadFileForm()
+    message = "Please follow the example table below when trying to upload an excel sheet!"
     if form.validate_on_submit():
         file = form.file_field.data  # grab the file
         secure_file_name = secure_filename(file.filename)
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"],
                                secure_file_name))
         return redirect(url_for("po_automator", excel_file_name=secure_file_name))
-    return render_template("upload.html", form=form)
+    return render_template("upload.html", form=form, message=message)
 
 
 @app.route("/web_form_automator")
