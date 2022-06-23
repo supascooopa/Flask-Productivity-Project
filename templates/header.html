@@ -26,6 +26,13 @@
     <li><a class="dropdown-item" href="{{ url_for('pdf_to_excel') }}">PDF To Excel</a></li>
     <li><a class="dropdown-item" href="{{ url_for('upload_excel_file') }}">PO Automator</a></li>
   </ul>
+        {% if route == "/web_form_automator"%}
+        <a href="{{url_for('automation_sheet')}}">
+            <button type="button" class="btn btn-primary">
+                download sample!
+            </button>
+        </a>
+        {% endif %}
         <a href="{{ url_for('logout') }}">
             <button type="button" class="btn btn-primary">
                 Logout

@@ -213,10 +213,30 @@ def excel_download(file_name):
         abort(404)
 
 
+@app.route("/automation-sheet-download")
+@login_required
+def automation_sheet():
+    return send_from_directory("/static/browser_automation/XL/TEST.xlsx")
+
+
+@app.route("/PO-excel-upload", methods=["GET", "POST"])
+@login_required
+def upload_excel_file():
+    form = UploadFileForm()
+    message = "Please follow the example table below when trying to upload an excel sheet!"
+    route_info = request.url_rule
+    if form.validate_on_submit():
+        file = form.file_field.data  # grab the file
+        secure_file_name = secure_filename(file.filename)
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"],
+                               secure_file_name))
+        return redirect(url_for("po_automator", excel_file_name=secure_file_name))
+    return render_template("upload.html", form=form, message=message, route=route_info.rule)
+
+
 @app.route("/PO-automator/<excel_file_name>", methods=["GET", "POST"])
 @login_required
 def po_automator(excel_file_name):
-
     # opens the workbook from the specified directory
     wb = load_workbook(f"static\\files\\{excel_file_name}")
     # activating worksheet
@@ -267,26 +287,15 @@ def po_automator(excel_file_name):
     return render_template("po_automator_page.html", lst=rows, form=po_form, len=len(rows))
 
 
-@app.route("/PO-excel-upload", methods=["GET", "POST"])
-@login_required
-def upload_excel_file():
-    form = UploadFileForm()
-    message = "Please follow the example table below when trying to upload an excel sheet!"
-    route_info = request.url_rule
-    if form.validate_on_submit():
-        file = form.file_field.data  # grab the file
-        secure_file_name = secure_filename(file.filename)
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"],
-                               secure_file_name))
-        return redirect(url_for("po_automator", excel_file_name=secure_file_name))
-    return render_template("upload.html", form=form, message=message, route=route_info.rule)
-
-
-@app.route("/web_form_automator")
+@app.route("/web_form_automator", methods=["GET", "POST"])
 @login_required
 def form_automator():
-    emo_automator()
-    return "working on it..."
+    upload_form = UploadFileForm()
+    route_info = request.url_rule
+    if upload_form.validate_on_submit():
+        emo_automator()
+        return redirect(url_for("form_automator", message="Your task has been completed"))
+    return render_template("upload.html", form=upload_form, route=route_info.rule)
 
 
 @app.errorhandler(413)
