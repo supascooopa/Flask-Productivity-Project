@@ -10,6 +10,7 @@ from flask import send_from_directory, abort
 from flask import send_file
 from flask import url_for
 from flask import redirect
+from flask import request
 from whatsapp import text_parser_ctwo
 from company_1 import company_number_one
 from openpyxl import load_workbook
@@ -169,7 +170,6 @@ def pdf_to_excel():
         new_file_name = modified_file_name.split("\\")[-1]
         print(new_file_name)
         return redirect(url_for("excel_download", file_name=new_file_name))
-
     return render_template("upload.html", form=form, message=message)
 
 
@@ -272,13 +272,14 @@ def po_automator(excel_file_name):
 def upload_excel_file():
     form = UploadFileForm()
     message = "Please follow the example table below when trying to upload an excel sheet!"
+    route_info = request.url_rule
     if form.validate_on_submit():
         file = form.file_field.data  # grab the file
         secure_file_name = secure_filename(file.filename)
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"],
                                secure_file_name))
         return redirect(url_for("po_automator", excel_file_name=secure_file_name))
-    return render_template("upload.html", form=form, message=message)
+    return render_template("upload.html", form=form, message=message, route=route_info.rule)
 
 
 @app.route("/web_form_automator")
