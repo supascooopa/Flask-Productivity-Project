@@ -168,7 +168,6 @@ def pdf_to_excel():
                                secure_file_name))  # save the file
         modified_file_name = company_number_one(os.path.abspath(f"static\\files\\{secure_file_name}"))
         new_file_name = modified_file_name.split("\\")[-1]
-        print(new_file_name)
         return redirect(url_for("excel_download", file_name=new_file_name))
     return render_template("upload.html", form=form, message=message)
 
@@ -185,7 +184,6 @@ def imei_automator():
                                secure_file_name))
         modified_excel_file = imei_machine(os.path.abspath(f"static\\files\\{secure_file_name}"))
         file_name = modified_excel_file.split("/")[-1]
-        print(file_name)
         return redirect(url_for("excel_download", file_name=file_name))
     return render_template("upload.html", form=form)
 
@@ -213,11 +211,13 @@ def excel_download(file_name):
         abort(404)
 
 
-@app.route("/automation-sheet-download/<path>")
+@app.route("/automation-sheet-download/<file_name>")
 @login_required
-def automation_sheet(path):
-    print(path)
-    return send_from_directory(path, "TEST.xlsx", as_attachment=True)
+def automation_sheet(file_name):
+    try:
+        return send_from_directory(os.path.abspath("static\\browser_automation\\XL"), file_name, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
 
 
 @app.route("/PO-excel-upload", methods=["GET", "POST"])
@@ -293,11 +293,11 @@ def po_automator(excel_file_name):
 def form_automator():
     upload_form = UploadFileForm()
     route_info = request.url_rule
-    file_path = os.path.abspath("static\\browser_automation\\XL\\TEST.xlsx")
+    file_name = secure_filename("TEST.xlsx")
     if upload_form.validate_on_submit():
         emo_automator()
         return redirect(url_for("form_automator", message="Your task has been completed"))
-    return render_template("upload.html", form=upload_form, route=route_info.rule, file_path=file_path)
+    return render_template("upload.html", form=upload_form, route=route_info.rule, file_name=file_name)
 
 
 @app.errorhandler(413)

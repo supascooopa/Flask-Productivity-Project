@@ -27,7 +27,7 @@
     <li><a class="dropdown-item" href="{{ url_for('upload_excel_file') }}">PO Automator</a></li>
   </ul>
         {% if route == "/web_form_automator"%}
-        <a href="{{url_for('automation_sheet', path='file_path')}}">
+        <a href="{{url_for('automation_sheet', file_name=file_name)}}">
             <button type="button" class="btn btn-primary">
                 download sample!
             </button>
