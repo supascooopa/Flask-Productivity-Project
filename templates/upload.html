@@ -7,25 +7,9 @@
         </div>
     </div>
 </div>
-<div class="row my-5">
-<div class="col-6">
-<div class="upload-container">
-    <form class="hstack" method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.file_field.label() }}
-        </div>
-        <div>
-            {{ form.file_field(class_="form-control") }}
-        </div>
-        <div>
-            {{ form.submit(class_="btn btn-primary  mx-auto") }}
-        </div>
-    </form>
-</div>
-    </div>
-    <div class="col-6 px-5 mx-0">
-        {% if route == "/PO-excel-upload" %}
+    {% if route == "/PO-excel-upload" %}
+    <div class="row">
+    <div class="col d-flex justify-content-center px-5 mx-0 mt-3">
 <table class="table table-bordered w-auto">
     <thead class="table-dark">
     <tr>
@@ -56,8 +40,27 @@
     </tr>
     </tbody>
 </table>
-{% endif %}
     </div>
+        </div>
+    {% endif %}
+<div class="row my-0">
+<div class="col d-flex justify-content-center">
+<div class="upload-container">
+    <form class="hstack" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.file_field.label() }}
+        </div>
+        <div>
+            {{ form.file_field(class_="form-control") }}
+        </div>
+        <div>
+            {{ form.submit(class_="btn btn-primary  mx-auto") }}
+        </div>
+    </form>
+</div>
+    </div>
+
 </div>
 {% include "footer.html" %}
 {% endblock %}

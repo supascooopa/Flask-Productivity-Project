@@ -37,12 +37,10 @@ def emo_automator():
     global driver
     service = Service("static\\browser_automation\\geckodriver.exe")
     driver = webdriver.Firefox(service=service)
-    starting_time = default_timer()
 
     excel_file = os.listdir("static\\browser_automation\\XL")[0]
     wb = openpyxl.load_workbook(f"static\\browser_automation\\XL\\{excel_file}")
     ws = wb.active
-    max_row = ws.max_row
 
     list_of_ce = [file for file in os.listdir("static\\browser_automation\\CE")]
     path_to_ce = [os.path.abspath("static\\browser_automation\\CE") + "\\" + file + " " for file in list_of_ce]
@@ -157,8 +155,4 @@ def emo_automator():
     driver.find_element(By.ID, "ctl00_cp_pnlBar1_i0_btnSelect_Upload").click()
     driver.switch_to.default_content()
 
-    ending_time = default_timer()
-    time_taken = str(ending_time - starting_time)
-    with open("time taken.txt", "w") as timer_file:
-        timer_file.write(time_taken)
 
