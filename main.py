@@ -213,10 +213,11 @@ def excel_download(file_name):
         abort(404)
 
 
-@app.route("/automation-sheet-download")
+@app.route("/automation-sheet-download/<path>")
 @login_required
-def automation_sheet():
-    return send_from_directory("/static/browser_automation/XL/TEST.xlsx")
+def automation_sheet(path):
+    print(path)
+    return send_from_directory(path, "TEST.xlsx", as_attachment=True)
 
 
 @app.route("/PO-excel-upload", methods=["GET", "POST"])
@@ -292,10 +293,11 @@ def po_automator(excel_file_name):
 def form_automator():
     upload_form = UploadFileForm()
     route_info = request.url_rule
+    file_path = os.path.abspath("static\\browser_automation\\XL\\TEST.xlsx")
     if upload_form.validate_on_submit():
         emo_automator()
         return redirect(url_for("form_automator", message="Your task has been completed"))
-    return render_template("upload.html", form=upload_form, route=route_info.rule)
+    return render_template("upload.html", form=upload_form, route=route_info.rule, file_path=file_path)
 
 
 @app.errorhandler(413)
