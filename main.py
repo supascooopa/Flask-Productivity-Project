@@ -19,7 +19,7 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
-from flask_security import SQLAlchemyUserDatastore, RoleMixin
+
 from web_form_automator import emo_automator
 from imei_processor import imei_machine
 
@@ -45,18 +45,23 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(10), nullable=False, unique=True)
     user_password = db.Column(db.String(80), nullable=False)
-    roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users"), lazy="dynamic")
+    # roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users"), lazy="dynamic")
 
 
-class Role(db.model, RoleMixin):
-    """ Database where the roles of users will be stored """
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(10), unique=True)
+# class Role(db.model, RoleMixin):
+#     """ Database where the roles of users will be stored """
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(10), unique=True)
 
 
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+# user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+# db.drop_all()
 # db.create_all()
-
+# new_user = User(
+#                 user_name="Mahmud_alp",
+#                 user_password=bcrypt.generate_password_hash("I_bash_grapes!"))
+# db.session.add(new_user)
+# db.session.commit()
 
 class UserLogin(FlaskForm):
     user_name_field = StringField("User Name", validators=[InputRequired(), length(min=2, max=20)])
@@ -123,15 +128,18 @@ def logout():
 
 
 @app.route("/register-user", methods=['GET', 'POST'])
+@login_required
 def registration_page():
-    form = UserRegistration()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password_field.data)
-        new_user = User(user_name=form.user_name_field.data, user_password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for("login_page"))
-    return render_template("register.html", register_form=form)
+    cu_id = current_user.id
+    if cu_id == 1:
+        form = UserRegistration()
+        if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(form.password_field.data)
+            new_user = User(user_name=form.user_name_field.data, user_password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("login_page"))
+        return render_template("register.html", register_form=form)
 
 
 @app.route("/home")
@@ -139,6 +147,7 @@ def registration_page():
 def home():
     """ Home Page
      Where links to various parts of the application are located"""
+    print(current_user.id)
     return render_template("index.html")
 
 
