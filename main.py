@@ -19,6 +19,7 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
+from flask_security import SQLAlchemyUserDatastore, RoleMixin
 from web_form_automator import emo_automator
 from imei_processor import imei_machine
 
@@ -32,6 +33,7 @@ app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file size is 400
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+
 # ---- CONFIGURING LOGIN MANAGER --- #
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -39,12 +41,20 @@ login_manager.login_view = "login_page"
 
 
 class User(db.Model, UserMixin):
-    """ Database where the user information will be stored"""
+    """ Database where the user information will be stored """
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(10), nullable=False, unique=True)
     user_password = db.Column(db.String(80), nullable=False)
+    roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users"), lazy="dynamic")
 
 
+class Role(db.model, RoleMixin):
+    """ Database where the roles of users will be stored """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(10), unique=True)
+
+
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 # db.create_all()
 
 
