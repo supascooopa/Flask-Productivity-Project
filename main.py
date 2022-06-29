@@ -26,7 +26,7 @@ from imei_processor import imei_machine
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["SECRET_KEY"] = "SUPER_SECRET_KEY"
+app.config["SECRET_KEY"] = os.environ.get("secret_key")
 app.config["UPLOAD_FOLDER"] = os.path.abspath("static\\files")  # configure upload folder
 app.config["MAX_CONTENT_LENGTH"] = 400 * 1024  # Maximum upload file size is 400kb
 db = SQLAlchemy(app)
