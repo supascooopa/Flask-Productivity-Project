@@ -19,7 +19,6 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
-
 from web_form_automator import emo_automator
 from imei_processor import imei_machine
 
