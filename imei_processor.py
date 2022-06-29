@@ -2,6 +2,7 @@ from openpyxl import Workbook, load_workbook
 from imei_db_api import imei_finder
 from datetime import datetime
 
+
 def imei_machine(work_book):
     # --- Loading workbook --- #
     wb = load_workbook(work_book)

@@ -44,23 +44,9 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(10), nullable=False, unique=True)
     user_password = db.Column(db.String(80), nullable=False)
-    # roles = db.relationship("Role", secondary=roles_users, backref=db.backref("users"), lazy="dynamic")
 
-
-# class Role(db.model, RoleMixin):
-#     """ Database where the roles of users will be stored """
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(10), unique=True)
-
-
-# user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-# db.drop_all()
 # db.create_all()
-# new_user = User(
-#                 user_name="Mahmud_alp",
-#                 user_password=bcrypt.generate_password_hash("I_bash_grapes!"))
-# db.session.add(new_user)
-# db.session.commit()
+
 
 class UserLogin(FlaskForm):
     user_name_field = StringField("User Name", validators=[InputRequired(), length(min=2, max=20)])
@@ -90,16 +76,15 @@ class POAutomationForm(FlaskForm):
 
 
 def writing_to_memory(path):
+    """A function to write files to memory and delete the created file"""
 
-        """A function to write files to memory and delete the created file"""
-
-        file_path = os.path.abspath(f"static/files/{path}")  # creating file path
-        return_data = io.BytesIO()  # ???
-        with open(file_path, "rb") as byte_file:  # reading as byte 'rb'
-            return_data.write(byte_file.read())  # writing to memory
-        return_data.seek(0)  # returning the cursor to the beginning
-        os.remove(file_path)  # removing the saved file
-        return return_data
+    file_path = os.path.abspath(f"static/files/{path}")  # creating file path
+    return_data = io.BytesIO()  # ???
+    with open(file_path, "rb") as byte_file:  # reading as byte 'rb'
+        return_data.write(byte_file.read())  # writing to memory
+    return_data.seek(0)  # returning the cursor to the beginning
+    os.remove(file_path)  # removing the saved file
+    return return_data
 
 
 @login_manager.user_loader

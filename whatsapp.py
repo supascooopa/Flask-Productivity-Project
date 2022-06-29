@@ -1,8 +1,10 @@
 import re
 import csv
 import datetime as dt
-""" this one is for company two """
+
+
 def text_parser_ctwo(file_name):
+    """ this one is for company two """
     with open(file_name) as file:
         lines = file.readlines()
     new_lst = []

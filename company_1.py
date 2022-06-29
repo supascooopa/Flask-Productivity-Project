@@ -5,6 +5,7 @@ import numpy as np
 
 
 def company_number_one(file_name):
+    """ Turns a price list into excel sheet """
     now = datetime.datetime.now().strftime("%d-%m-%Y")
     new_file_name = file_name + now
     joined_coordinates = ["45,779,545,90", "45,779,545,90", "45,779,545,90"]
