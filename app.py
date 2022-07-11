@@ -12,7 +12,7 @@ from flask import url_for
 from flask import redirect
 from flask import request
 from whatsapp import text_parser_ctwo
-from company_1 import company_number_one
+# from company_1 import company_number_one
 from openpyxl import load_workbook
 import io
 from datetime import datetime
@@ -163,16 +163,17 @@ def pdf_to_excel():
     form = UploadFileForm()
     message = "Only add the last three pages of the price list! It can't be a image based PDF!!"
     if form.validate_on_submit():
-        # same stuff like the above
-        # TODO put the grabbing and saving file in a function
-        file = form.file_field.data  # grab the file
-        secure_file_name = secure_filename(file.filename)
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                               app.config["UPLOAD_FOLDER"],
-                               secure_file_name))  # save the file
-        modified_file_name = company_number_one(os.path.abspath(f"static\\files\\{secure_file_name}"))
-        new_file_name = modified_file_name.split("\\")[-1]
-        return redirect(url_for("excel_download", file_name=new_file_name))
+    #     # same stuff like the above
+    #     # TODO put the grabbing and saving file in a function
+    #     file = form.file_field.data  # grab the file
+    #     secure_file_name = secure_filename(file.filename)
+    #     file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+    #                            app.config["UPLOAD_FOLDER"],
+    #                            secure_file_name))  # save the file
+    #     modified_file_name = company_number_one(os.path.abspath(f"static\\files\\{secure_file_name}"))
+    #     new_file_name = modified_file_name.split("\\")[-1]
+    #     return redirect(url_for("excel_download", file_name=new_file_name))
+         return "hello stranger!"
     return render_template("upload.html", form=form, message=message)
 
 
