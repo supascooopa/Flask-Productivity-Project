@@ -44,10 +44,9 @@ class User(db.Model, UserMixin):
     """ Database where the user information will be stored """
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(10), nullable=False, unique=True)
-    user_password = db.Column(db.String(80), nullable=False)
+    user_password = db.Column(db.String(128), nullable=False)
 
 # db.create_all()
-
 
 class UserLogin(FlaskForm):
     user_name_field = StringField("User Name", validators=[InputRequired(), length(min=2, max=20)])
