@@ -217,18 +217,19 @@ def excel_download(file_name):
         abort(404)
 
 
-@app.route("/automation-sheet-download/<file_name>")
+@app.route("/automation-sheet-download")
 @login_required
-def automation_sheet(file_name):
+def automation_sheet():
     try:
         # FOR TESTING
         # return send_from_directory(os.path.abspath("static\\browser_automation\\XL"), file_name, as_attachment=True)
         # FOR DEPLOYMENT
         # --- Fetching the file from s3 --- #
         file = file_downloader("browser_automation/excel_sample/excel_sample.xlsx")
+        # --- returning file as a response --- #
         return Response(file["Body"].read(),
                         mimetype="application/vnd.ms-excel",
-                        headers={"Content-Disposition": f"attachment;filename={file_name}.xlsx"})
+                        headers={"Content-Disposition": f"attachment;filename=excel_sample.xlsx"})
     except FileNotFoundError:
         abort(404)
 
