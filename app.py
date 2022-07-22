@@ -24,8 +24,8 @@ from imei_processor import imei_machine
 
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = os.environ.get("secret_key")
 app.config["UPLOAD_FOLDER"] = os.path.abspath("static\\files")  # configure upload folder
@@ -47,6 +47,7 @@ class User(db.Model, UserMixin):
     user_password = db.Column(db.String(128), nullable=False)
 
 # db.create_all()
+
 
 class UserLogin(FlaskForm):
     user_name_field = StringField("User Name", validators=[InputRequired(), length(min=2, max=20)])
@@ -162,8 +163,8 @@ def pdf_to_excel():
     form = UploadFileForm()
     message = "Only add the last three pages of the price list! It can't be a image based PDF!!"
     if form.validate_on_submit():
-    #     # same stuff like the above
-    #     # TODO put the grabbing and saving file in a function
+         # same stuff like the above
+        # TODO put the grabbing and saving file in a function
     #     file = form.file_field.data  # grab the file
     #     secure_file_name = secure_filename(file.filename)
     #     file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),

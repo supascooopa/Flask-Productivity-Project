@@ -1,6 +1,7 @@
 gunicorn==20.1.0
 async-generator==1.10
 attrs==21.4.0
+boto3==1.24.35
 bcrypt==3.2.2
 camelot-py==0.9.0
 certifi==2022.6.15
