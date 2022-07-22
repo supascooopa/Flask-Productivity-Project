@@ -53,4 +53,4 @@ def file_downloader(bucket_key):
     )
     bucket = s3.Bucket("blue-cell-folder")
     key = bucket_key
-    bucket.download_file(Key=bucket_key, Filename='sample.xlsx')
+    return bucket.Object(key).get()

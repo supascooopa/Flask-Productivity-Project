@@ -1,5 +1,5 @@
 import openpyxl
-from flask import Flask
+from flask import Flask, Response
 from flask import render_template
 from wtforms import FileField, SubmitField, StringField, FieldList, FormField, PasswordField
 from flask_wtf import FlaskForm
@@ -21,6 +21,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from flask_bcrypt import Bcrypt
 from web_form_automator import emo_automator
 from imei_processor import imei_machine
+from s3_file_manager import file_downloader
 
 
 app = Flask(__name__)
@@ -220,7 +221,14 @@ def excel_download(file_name):
 @login_required
 def automation_sheet(file_name):
     try:
-        return send_from_directory(os.path.abspath("static\\browser_automation\\XL"), file_name, as_attachment=True)
+        # FOR TESTING
+        # return send_from_directory(os.path.abspath("static\\browser_automation\\XL"), file_name, as_attachment=True)
+        # FOR DEPLOYMENT
+        # --- Fetching the file from s3 --- #
+        file = file_downloader("browser_automation/excel_sample/excel_sample.xlsx")
+        return Response(file["Body"].read(),
+                        mimetype="application/vnd.ms-excel",
+                        headers={"Content-Disposition": f"attachment;filename={file_name}.xlsx"})
     except FileNotFoundError:
         abort(404)
 
