@@ -21,7 +21,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from flask_bcrypt import Bcrypt
 from web_form_automator import emo_automator
 from imei_processor import imei_machine
-from s3_file_manager import file_downloader
+from s3_file_manager import file_downloader, file_uploader, file_getter
 
 
 app = Flask(__name__)
@@ -144,12 +144,14 @@ def text_to_csv():
     if form.validate_on_submit():
         file = form.file_field.data  # grab the file
         secure_file_name = secure_filename(file.filename)
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                               app.config["UPLOAD_FOLDER"],
-                               secure_file_name))  # save the file
+        # file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+        #                        app.config["UPLOAD_FOLDER"],
+        #                        secure_file_name))  # save the file in testing
+        bucket_key = f"csv_files/{secure_file_name}"
+        file_uploader(secure_file_name, bucket_key)
         # Below function parser a text file (Specifically Whatsapp price list sent by the company two)
         # in order to convert it to a csv file we pass the directory location of the file we want to be converted
-        modified_file_name = text_parser_ctwo(os.path.abspath(f"static\\files\\{secure_file_name}"))
+        modified_file_name = text_parser_ctwo(file_getter(bucket_key))
         # In order send the user the modified data we split the name function gave back to us
         # and take the modified file name and redirect that name to another function
         # TODO below can be done inside the function
