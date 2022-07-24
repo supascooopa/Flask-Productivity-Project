@@ -5,7 +5,7 @@ import datetime as dt
 
 def text_parser_ctwo(file_name):
     """ this one is for company two """
-    with open(file_name) as file:
+    with open(file_name.decode("utf-8")) as file:
         lines = file.readlines()
     new_lst = []
     for i in lines:
