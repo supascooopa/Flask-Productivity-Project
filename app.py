@@ -148,7 +148,7 @@ def text_to_csv():
         #                        app.config["UPLOAD_FOLDER"],
         #                        secure_file_name))  # save the file in testing
         bucket_key = f"csv_files/{secure_file_name}"
-        file_uploader(secure_file_name, bucket_key)
+        file_uploader(file, bucket_key)
         csv_file = io.StringIO(file_getter(bucket_key).decode("utf-8"))
         # Below function parser a text file (Specifically Whatsapp price list sent by the company two)
         # in order to convert it to a csv file we pass the directory location of the file we want to be converted
