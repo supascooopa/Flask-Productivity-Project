@@ -4,9 +4,7 @@ import datetime as dt
 
 def text_parser_ctwo(file):
     """ this one is for company two """
-
-    with open(file) as file:
-        lines = file.readlines()
+    lines = file.readlines()
     new_lst = []
     for i in lines:
         split_i = i.split(",")

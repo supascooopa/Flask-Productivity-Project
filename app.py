@@ -150,10 +150,10 @@ def text_to_csv():
         #                        secure_file_name))  # save the file in testing
         bucket_key = f"csv_files/{secure_file_name}"
         file_uploader(binary_data, bucket_key)
-        csv_file = io.StringIO(file_getter(bucket_key).decode("utf-8"))
+        text_file = io.StringIO(file_getter(bucket_key).decode("utf-8"))
         # Below function parser a text file (Specifically Whatsapp price list sent by the company two)
         # in order to convert it to a csv file we pass the directory location of the file we want to be converted
-        modified_file_name = text_parser_ctwo(csv_file)
+        modified_file_name = text_parser_ctwo(text_file)
         # In order send the user the modified data we split the name function gave back to us
         # and take the modified file name and redirect that name to another function
         return redirect(url_for("csv_download", file_name=modified_file_name))
