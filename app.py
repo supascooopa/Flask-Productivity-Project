@@ -149,14 +149,13 @@ def text_to_csv():
         #                        secure_file_name))  # save the file in testing
         bucket_key = f"csv_files/{secure_file_name}"
         file_uploader(secure_file_name, bucket_key)
+        csv_file = io.StringIO(file_getter(bucket_key).decode("utf-8"))
         # Below function parser a text file (Specifically Whatsapp price list sent by the company two)
         # in order to convert it to a csv file we pass the directory location of the file we want to be converted
-        modified_file_name = text_parser_ctwo(file_getter(bucket_key))
+        modified_file_name = text_parser_ctwo(csv_file)
         # In order send the user the modified data we split the name function gave back to us
         # and take the modified file name and redirect that name to another function
-        # TODO below can be done inside the function
-        new_file_name = modified_file_name.split("\\")[-1]
-        return redirect(url_for("csv_download", file_name=new_file_name))
+        return redirect(url_for("csv_download", file_name=modified_file_name))
     return render_template("upload.html", form=form)
 
 
@@ -202,7 +201,10 @@ def csv_download(file_name):
     # A try block if the requested file doesn't exist
     try:
         return_data = writing_to_memory(file_name)
-        return send_file(return_data, mimetype="application/csv", download_name=file_name)
+        # return send_file(return_data, mimetype="application/csv", download_name=file_name)
+        return Response(return_data,mimetype="application/csv",
+                        headers={"Content-Disposition": f"attachment;filename={file_name}"}
+                        )
     except FileNotFoundError:
         # file not found!
         abort(404)
