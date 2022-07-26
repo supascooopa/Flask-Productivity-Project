@@ -29,7 +29,7 @@ def file_uploader(file, bucket_key):
     )
     # --- UPLOADING TO A SPECIFIC DIRECTORY IN S3 -- #
     obj = s3.Bucket("blue-cell-folder")
-    obj.upload_file(file, bucket_key)
+    obj.Object(bucket_key).put(Body=file)
 
 
 def file_downloader(bucket_key):

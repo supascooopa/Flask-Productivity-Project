@@ -143,12 +143,13 @@ def text_to_csv():
     form = UploadFileForm()
     if form.validate_on_submit():
         file = form.file_field.data  # grab the file
+        binary_data = file.read()  # converts the file to binary
         secure_file_name = secure_filename(file.filename)
         # file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
         #                        app.config["UPLOAD_FOLDER"],
         #                        secure_file_name))  # save the file in testing
         bucket_key = f"csv_files/{secure_file_name}"
-        file_uploader(file, bucket_key)
+        file_uploader(binary_data, bucket_key)
         csv_file = io.StringIO(file_getter(bucket_key).decode("utf-8"))
         # Below function parser a text file (Specifically Whatsapp price list sent by the company two)
         # in order to convert it to a csv file we pass the directory location of the file we want to be converted
