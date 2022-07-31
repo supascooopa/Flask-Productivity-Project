@@ -195,9 +195,10 @@ def imei_automator():
         file = form.file_field.data
         binary_data = file.read()  # converts the file to binary
         secure_file_name = secure_filename(file.filename)
-        bucket_key = f"excel_files/{secure_file_name}"
-        file_uploader(binary_data, bucket_key)
-        excel_file = io.BytesIO(file_getter(bucket_key))
+        # bucket_key = f"excel_files/{secure_file_name}"
+        # file_uploader(binary_data, bucket_key)
+        # excel_file = io.BytesIO(file_getter(bucket_key))
+        excel_file = io.BytesIO(binary_data)
         modified_file = imei_machine(excel_file)
         return Response(modified_file,
                         mimetype="application/vnd.ms-excel",
