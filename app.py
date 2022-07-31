@@ -25,8 +25,8 @@ from s3_file_manager import file_downloader, file_uploader, file_getter
 
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = os.environ.get("secret_key")
 app.config["UPLOAD_FOLDER"] = os.path.abspath("static\\files")  # configure upload folder
@@ -133,7 +133,6 @@ def registration_page():
 def home():
     """ Home Page
      Where links to various parts of the application are located"""
-    print(current_user.id)
     return render_template("index.html")
 
 
@@ -176,7 +175,7 @@ def pdf_to_excel():
     #     modified_file_name = company_number_one(os.path.abspath(f"static\\files\\{secure_file_name}"))
     #     new_file_name = modified_file_name.split("\\")[-1]
     #     return redirect(url_for("excel_download", file_name=new_file_name))
-         return "hello stranger!"
+        return "hello stranger!"
     return render_template("upload.html", form=form, message=message)
 
 
@@ -185,14 +184,24 @@ def pdf_to_excel():
 def imei_automator():
     form = UploadFileForm()
     if form.validate_on_submit():
-        file = form.file_field.data  # grab the file
+        # --- For local testing --- #
+        # file = form.file_field.data  # grab the file
+        # secure_file_name = secure_filename(file.filename)
+        # file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+        #                        app.config["UPLOAD_FOLDER"],
+        #                        secure_file_name))
+        # modified_excel_file = imei_machine(os.path.abspath(f"static\\files\\{secure_file_name}"))
+        # file_name = modified_excel_file.split("/")[-1]
+        file = form.file_field.data
+        binary_data = file.read()  # converts the file to binary
         secure_file_name = secure_filename(file.filename)
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                               app.config["UPLOAD_FOLDER"],
-                               secure_file_name))
-        modified_excel_file = imei_machine(os.path.abspath(f"static\\files\\{secure_file_name}"))
-        file_name = modified_excel_file.split("/")[-1]
-        return redirect(url_for("excel_download", file_name=file_name))
+        bucket_key = f"excel_files/{secure_file_name}"
+        file_uploader(binary_data, bucket_key)
+        excel_file = io.BytesIO(file_getter(bucket_key))
+        modified_file = imei_machine(excel_file)
+        return Response(modified_file,
+                        mimetype="application/vnd.ms-excel",
+                        headers={"Content-Disposition": f"attachment;filename={secure_file_name}"})
     return render_template("upload.html", form=form)
 
 
@@ -203,7 +212,7 @@ def csv_download(file_name):
     try:
         return_data = writing_to_memory(file_name)
         # return send_file(return_data, mimetype="application/csv", download_name=file_name)
-        return Response(return_data,mimetype="application/csv",
+        return Response(return_data, mimetype="application/csv",
                         headers={"Content-Disposition": f"attachment;filename={file_name}"}
                         )
     except FileNotFoundError:

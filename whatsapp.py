@@ -19,5 +19,5 @@ def text_parser_ctwo(file):
         csv_writer = csv.writer(csv_file)
         csv_writer.writerow(["description", "QTY", "Price (EUR)"])
         csv_writer.writerows(new_lst)
-    return new_file_name
+    return csv_file
 
