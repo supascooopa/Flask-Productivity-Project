@@ -144,18 +144,15 @@ def text_to_csv():
         file = form.file_field.data  # grab the file
         binary_data = file.read()  # converts the file to binary
         secure_file_name = secure_filename(file.filename)
-        # file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-        #                        app.config["UPLOAD_FOLDER"],
-        #                        secure_file_name))  # save the file in testing
-        bucket_key = f"csv_files/{secure_file_name}"
-        file_uploader(binary_data, bucket_key)
-        text_file = io.StringIO(file_getter(bucket_key).decode("utf-8"))
+        file_name = secure_file_name.split(".")[0]
         # Below function parser a text file (Specifically Whatsapp price list sent by the company two)
         # in order to convert it to a csv file we pass the directory location of the file we want to be converted
-        modified_file_name = text_parser_ctwo(text_file)
+        modified_file = text_parser_ctwo(binary_data.decode("utf-8"))
         # In order send the user the modified data we split the name function gave back to us
         # and take the modified file name and redirect that name to another function
-        return redirect(url_for("csv_download", file_name=modified_file_name))
+        return Response(modified_file, mimetype="application/csv",
+                        headers={"Content-Disposition": f"attachment;filename={file_name}.csv"}
+                        )
     return render_template("upload.html", form=form)
 
 
