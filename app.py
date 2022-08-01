@@ -203,21 +203,6 @@ def imei_automator():
     return render_template("upload.html", form=form)
 
 
-@app.route("/csv-download/<file_name>")
-@login_required
-def csv_download(file_name):
-    # A try block if the requested file doesn't exist
-    try:
-        return_data = writing_to_memory(file_name)
-        # return send_file(return_data, mimetype="application/csv", download_name=file_name)
-        return Response(return_data, mimetype="application/csv",
-                        headers={"Content-Disposition": f"attachment;filename={file_name}"}
-                        )
-    except FileNotFoundError:
-        # file not found!
-        abort(404)
-
-
 @app.route("/excel-download/<file_name>")
 @login_required
 def excel_download(file_name):
@@ -255,8 +240,11 @@ def upload_excel_file():
     if form.validate_on_submit():
         file = form.file_field.data  # grab the file
         secure_file_name = secure_filename(file.filename)
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"],
-                               secure_file_name))
+        binary_data = file.read()
+        bucket_key = f"excel_files/{secure_file_name}"
+        file_uploader(binary_data, bucket_key)
+        # file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"],
+                               # secure_file_name))
         return redirect(url_for("po_automator", excel_file_name=secure_file_name))
     return render_template("upload.html", form=form, message=message, route=route_info.rule)
 
@@ -265,7 +253,10 @@ def upload_excel_file():
 @login_required
 def po_automator(excel_file_name):
     # opens the workbook from the specified directory
-    wb = load_workbook(f"static\\files\\{excel_file_name}")
+    bucket_key = f"excel_files/{excel_file_name}"
+    data = file_getter(bucket_key)
+    binary_data = io.BytesIO(data)
+    wb = load_workbook(binary_data)
     # activating worksheet
     ws = wb.active
     # grabbing values by row
@@ -273,7 +264,6 @@ def po_automator(excel_file_name):
     # creating a dictionary and inserting into FieldList
     form_dict = [{i[0]:i[1]} for i in rows]
     po_form = POAutomationForm(phones=form_dict)
-
     if po_form.validate_on_submit():
         # using zip() to go over the FieldList fields and active sheet rows
         for data, phones in zip(po_form.data["phones"], rows):
@@ -309,8 +299,13 @@ def po_automator(excel_file_name):
         todays_date = datetime.now().strftime("%d.%m.%y %H:%M")
         new_file_name = f"static\\files\\PO{todays_date}.xlsx"
         new_wb.save(new_file_name)
+        virtual_wb = io.BytesIO()
+        new_wb.save(virtual_wb)
+        virtual_wb.seek(0)
         only_file_name = new_file_name.split("\\")[-1]
-        return redirect(url_for("excel_download", file_name=only_file_name))
+        return Response(virtual_wb,
+                        mimetype="application/vnd.ms-excel",
+                        headers={"Content-Disposition": f"attachment;filename={only_file_name}"})
     return render_template("po_automator_page.html", lst=rows, form=po_form, len=len(rows))
 
 

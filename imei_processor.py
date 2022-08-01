@@ -3,6 +3,7 @@ from imei_db_api import imei_finder
 from datetime import datetime
 from io import BytesIO
 
+
 def imei_machine(work_book):
     # --- Loading workbook --- #
     wb = load_workbook(work_book)
@@ -42,9 +43,6 @@ def imei_machine(work_book):
                         new_ws.cell(row=row_number, column=2, value=cells)
                         # Need to keep track of number of rows the s
                         row_number += 1
-    now = datetime.now().strftime("%d.%m.%Y")
-    file_name = "static/files/"+"imei" + now + ".xlsx"
-    new_wb.save(file_name)
     virtual_wb = BytesIO()
     new_wb.save(virtual_wb)
     virtual_wb.seek(0)
