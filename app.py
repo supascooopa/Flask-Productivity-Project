@@ -296,16 +296,12 @@ def po_automator(excel_file_name):
         for rows in new_list:
             new_ws.append(rows)
         # choosing name for file and saving the excel file
-        todays_date = datetime.now().strftime("%d.%m.%y %H:%M")
-        new_file_name = f"static\\files\\PO{todays_date}.xlsx"
-        new_wb.save(new_file_name)
         virtual_wb = io.BytesIO()
         new_wb.save(virtual_wb)
         virtual_wb.seek(0)
-        only_file_name = new_file_name.split("\\")[-1]
         return Response(virtual_wb,
                         mimetype="application/vnd.ms-excel",
-                        headers={"Content-Disposition": f"attachment;filename={only_file_name}"})
+                        headers={"Content-Disposition": f"attachment;filename={excel_file_name}"})
     return render_template("po_automator_page.html", lst=rows, form=po_form, len=len(rows))
 
 
